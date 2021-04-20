@@ -64,6 +64,45 @@ function handleClick() {
     d3.selectAll('.'+selected).classed('active',false);
     d3.select(this).classed('inactive',false);
     d3.select(this).classed('active',true);
+    showCircles();
 };
+var chart = svg.append('g').attr('transform',`translate(75,${height-75})`)
+var xScaleLoc = chart.append('g').transition().duration(2000);
+var yScaleLoc = chart.append('g').transition().duration(2000);
 
-var xscale = svg.append('g').append('circle').attr('r',10).attr('transform',`translate(75,${height-75})`)
+
+
+showCircles();
+
+function showCircles() {
+    var xSel = d3.selectAll('.x').filter('.active').attr('data-id');
+    var ySel = d3.selectAll('.y').filter('.active').attr('data-id');
+    
+    console.log(xSel);
+    d3.csv('assets/data/data.csv').then(data=>{
+        
+        var xVal = data.map(obj=> +obj[xSel]);
+        var yVal = data.map(obj=> +obj[ySel]);
+        
+        console.log(yVal);
+
+        var xScaler = d3.scaleLinear().range([0, .8*width]).domain([.95 * d3.min(xVal), 1.05 * d3.max(xVal)]);
+        var yScaler = d3.scaleLinear().range([0, - .75*height]).domain([.95 * d3.min(yVal), 1.05 * d3.max(yVal)]);
+
+        xScaleLoc.call(d3.axisBottom(xScaler));
+        yScaleLoc.call(d3.axisLeft(yScaler));
+
+        var circles = chart.selectAll('g').data(data).enter().append('g').on('mouseover', function (d) {
+            toolTip.show(d, this);
+            d3.select(this).style('stroke','#323232');
+        });
+        
+        circles.append('circle').attr('r', .02*width).attr('class','stateCircle');
+        circles.append('text').attr('class','stateText');
+
+        d3.selectAll('.stateCircle').transition().duration(1000).attr('cx', d => xScaler(d[xSel])).attr('cy', d => yScaler(d[ySel]));
+        d3.selectAll('.stateText').transition().duration(1000).attr('dx', d => xScaler(d[xSel])).attr('dy', d => yScaler(d[ySel]) + 5).text(d => d.abbr);
+
+        circles.call(toolTip);
+    });
+};
