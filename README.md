@@ -1,4 +1,5 @@
-# D3 Homework - Data Journalism and D3
+For this homework I was tasked to visualize data for a major metro paper using d3 in javascript and html. The data comes from the U.S Census Bureeau and Behavioral Risk Factor Surveillance System. The data consist of trends, which shape a persons life. I created an analysis comparing healthcare vs poverty and smokers versus age. 
+# D3  - Data Journalism and D3
 
 ![Newsroom](https://media.giphy.com/media/v2xIous7mnEYg/giphy.gif)
 
