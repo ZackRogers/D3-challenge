@@ -1,4 +1,3 @@
-d3.select('#scatter').style('border','2px solid black');
 var width = parseFloat(d3.select('#scatter').style('width'));
 var height = .66*width;
 
